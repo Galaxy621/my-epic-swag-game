@@ -21,8 +21,10 @@ LRESULT CALLBACK WndProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam) {
 
         case WM_SIZING: {
             auto window = (Window*) GetWindowLongPtr(hwnd, GWLP_USERDATA);
-            auto width = LOWORD(lParam);
-            auto height = HIWORD(lParam);
+
+            RECT* rect = (RECT*) lParam;
+            int width = rect->right - rect->left;
+            int height = rect->bottom - rect->top;
 
             window->resize(width, height);
 
@@ -39,7 +41,6 @@ LRESULT CALLBACK WndProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam) {
 Rect Window::get_rect() {
     RECT rc;
     GetClientRect(m_handle, &rc);
-    std::cout << rc.left << " " << rc.top << " " << rc.right << " " << rc.bottom << std::endl;
     return Rect(rc.left, rc.top, rc.right - rc.left, rc.bottom - rc.top);
 }
 
@@ -48,7 +49,7 @@ Window::Window(LPCSTR title, int32_t width, int32_t height) : title(title), widt
     wc.cbSize = sizeof(WNDCLASSEX);
     wc.lpszClassName = title;
     wc.lpfnWndProc = &WndProc;
-    wc.style = CS_OWNDC;
+    wc.style = CS_OWNDC | CS_HREDRAW | CS_VREDRAW;
 
     auto classId = RegisterClassEx(&wc);
     assert(classId);

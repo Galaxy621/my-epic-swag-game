@@ -42,20 +42,20 @@ void ShaderProgram::attach(const char* source, const ShaderType type) {
     glShaderSource(shaderId, 1, &shaderSource, nullptr);
     glCompileShader(shaderId);
 
-	int result;
-	glGetShaderiv(shaderId, GL_COMPILE_STATUS, &result);
+	int length;
+	glGetShaderiv(shaderId, GL_INFO_LOG_LENGTH, &length);
 
-	if (result == GL_FALSE)
+	if (length > 0)
 	{
-		int length;
-		glGetShaderiv(shaderId, GL_INFO_LOG_LENGTH, &length);
-		char* message = (char*)_malloca(length * sizeof(char));
-		glGetShaderInfoLog(shaderId, length, &length, message);
-		std::cout << "Failed to compile " << (type == VERTEX_SHADER ? "vertex" : "fragment") << " shader!" << std::endl;
+        char* message = new char[length - 2];
+		glGetShaderInfoLog(shaderId, length - 2, &length, message);
+
+		std::cout << "Failed to compile " << (type == VERTEX_SHADER ? "vertex" : "fragment") << " shader\n";
 		std::cout << message << std::endl;
+        
+        delete[] message;
 		glDeleteShader(shaderId);
 	} else {
-        // std::cout << "Successfully compiled " << (type == GL_VERTEX_SHADER ? "vertex" : "fragment") << " shader!" << std::endl;
         glAttachShader(m_programId, shaderId);
         m_attachedShaders[type] = shaderId;
     }

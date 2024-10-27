@@ -1,6 +1,8 @@
 #ifndef VECTOR4_HPP
 #define VECTOR4_HPP
 
+#define v4_unpack(v) v.x, v.y, v.z, v.w
+
 class Vector4 {
     public:
         Vector4() {};

@@ -4,25 +4,16 @@
 #include "window.hpp"
 #include "graphics.hpp"
 
-void Game::run() {
+void Game::platform_update() {
+    MSG msg = {};
 
-    on_create();
-
-    while (m_running) {
-        MSG msg = {};
-
-        while (PeekMessage(&msg, NULL, 0, 0, PM_REMOVE)) {
-            if (msg.message == WM_QUIT) {
-                quit();
-                continue;
-            }
-
-            TranslateMessage(&msg);
-            DispatchMessage(&msg);
+    while (PeekMessage(&msg, NULL, 0, 0, PM_REMOVE)) {
+        if (msg.message == WM_QUIT) {
+            quit();
+            continue;
         }
 
-        on_update();
+        TranslateMessage(&msg);
+        DispatchMessage(&msg);
     }
-
-    on_destroy();
 }
