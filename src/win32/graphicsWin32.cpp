@@ -11,17 +11,17 @@ GraphicsEngine::GraphicsEngine() {
     WNDCLASSEX wc = {};
     wc.style = CS_OWNDC;
     wc.lpfnWndProc = DefWindowProc;
-    wc.lpszClassName = L"OGLDummyWindow";
+    wc.lpszClassName = "OGLDummyWindow";
     wc.cbSize = sizeof(WNDCLASSEX);
     wc.hInstance = GetModuleHandle(nullptr);
 
     ATOM classId = RegisterClassEx(&wc);
     assert(classId);
 
-    HWND dummy = CreateWindowEx(
+    HWND dummy = CreateWindowExA(
         0,
-        MAKEINTATOM(classId),
-        L"OGLDummyWindow",
+        "OGLDummyWindow",
+        "OGLDummyWindow",
         0,
         CW_USEDEFAULT,
         CW_USEDEFAULT,

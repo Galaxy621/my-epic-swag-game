@@ -9,8 +9,10 @@
 #include "rect.hpp"
 
 Game::Game() {
+    // std::cout << glGetString(GL_VERSION) << std::endl;
+
     m_graphics = std::make_unique<GraphicsEngine>();
-    m_window = std::make_unique<Window>(L"Game", 1280, 720);
+    m_window = std::make_unique<Window>("Game", 1280, 720);
 
     m_window->make_current();
     m_graphics->set_viewport(m_window->get_rect());
@@ -21,6 +23,11 @@ Game::~Game() {
 }
 
 void Game::on_create() {
+
+    std::cout << "OpenGL version:   " << glGetString(GL_VERSION) << std::endl;
+    std::cout << "OpenGL vendor:    " << glGetString(GL_VENDOR) << std::endl;
+    std::cout << "Error:            " << glGetError() << std::endl;
+
     const float vertices[] = {
         -0.5f, -0.5f, 0.0f,
          0.5f, -0.5f, 0.0f,

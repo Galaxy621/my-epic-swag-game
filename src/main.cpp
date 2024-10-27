@@ -1,3 +1,6 @@
+#define UNICODE
+#define _UNICODE
+
 #include <iostream>
 #include "game.hpp"
 
