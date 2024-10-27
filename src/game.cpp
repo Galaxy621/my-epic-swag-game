@@ -15,7 +15,9 @@ Game::Game() {
     m_window = std::make_unique<Window>("Game", 1280, 720);
 
     m_window->make_current();
-    m_graphics->set_viewport(m_window->get_rect());
+
+    Rect rect = m_window->get_rect();
+    glViewport(rect.left, rect.top, rect.width, rect.height);
 }
 
 Game::~Game() {
@@ -52,11 +54,13 @@ void Game::on_destroy() {
 }
 
 void Game::on_update() {
-    m_graphics->clear(Vector4(1.0f, 0.0f, 0.0f, 1.0f));
+    Vector4 color = Vector4(0.0f, 0.0f, 0.0f, 1.0f);
+    glClearColor(color.x, color.y, color.z, color.w);
+    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-    m_graphics->set_vertex_array_object(m_trisVAO);
-    m_graphics->set_shader_program(m_shaderProgram);
-    m_graphics->draw_tris(m_trisVAO->get_vertex_buffer_size(), 0);
+    glBindVertexArray(m_trisVAO->get_id());
+    glUseProgram(m_shaderProgram->get_id());
+    glDrawArrays(GL_TRIANGLES, 0, m_trisVAO->get_vertex_buffer_size());
 
     m_window->present(false);
 }

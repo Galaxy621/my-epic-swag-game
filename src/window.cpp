@@ -1,5 +1,6 @@
 #include "window.hpp"
 #include <assert.h>
+#include <iostream>
 
 #include <glad/glad.h>
 #include <glad/glad_wgl.h>
@@ -18,6 +19,16 @@ LRESULT CALLBACK WndProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam) {
             break;
         }
 
+        case WM_SIZING: {
+            auto window = (Window*) GetWindowLongPtr(hwnd, GWLP_USERDATA);
+            auto width = LOWORD(lParam);
+            auto height = HIWORD(lParam);
+
+            window->resize(width, height);
+
+            break;
+        }
+
         default:
             return DefWindowProc(hwnd, msg, wParam, lParam);
     }
@@ -28,6 +39,7 @@ LRESULT CALLBACK WndProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam) {
 Rect Window::get_rect() {
     RECT rc;
     GetClientRect(m_handle, &rc);
+    std::cout << rc.left << " " << rc.top << " " << rc.right << " " << rc.bottom << std::endl;
     return Rect(rc.left, rc.top, rc.right - rc.left, rc.bottom - rc.top);
 }
 
@@ -48,7 +60,7 @@ Window::Window(LPCSTR title, int32_t width, int32_t height) : title(title), widt
         0,
         title,
         title,
-        WS_OVERLAPPED | WS_CAPTION | WS_SYSMENU,
+        WS_OVERLAPPEDWINDOW | WS_CAPTION | WS_SYSMENU,
         CW_USEDEFAULT, 
         CW_USEDEFAULT,
         rc.right - rc.left,
@@ -124,4 +136,10 @@ void Window::present(bool vsync) {
     wglSwapIntervalEXT(vsync);
     wglSwapLayerBuffers(hdc, WGL_SWAP_MAIN_PLANE);
     ReleaseDC(m_handle, hdc);
+}
+
+void Window::resize(int32_t width, int32_t height) {
+    this->width = width;
+    this->height = height;
+    glViewport(0, 0, width, height);
 }

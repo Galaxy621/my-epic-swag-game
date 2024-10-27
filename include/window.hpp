@@ -16,6 +16,7 @@ class Window {
 
         void make_current();
         void present(bool vsync);
+        void resize(int32_t width, int32_t height);
 
     private:
         HWND m_handle = nullptr;
