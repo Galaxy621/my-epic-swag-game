@@ -6,7 +6,6 @@
 
 #include <stdexcept>
 
-
 GraphicsEngine::GraphicsEngine() {
     WNDCLASSEX wc = {};
     wc.style = CS_OWNDC;
