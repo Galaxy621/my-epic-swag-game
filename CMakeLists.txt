@@ -17,3 +17,7 @@ include_directories(${PROJECT_SOURCE_DIR}/lib)
 # Link libraries
 target_link_libraries(MyEpicSwagGame ${CMAKE_THREAD_LIBS_INIT} opengl32 gdi32)
 
+# Copy assets to build directory
+# Check if it exists first though, destroy it if needs be
+file(REMOVE_RECURSE ${PROJECT_BINARY_DIR}/assets)
+file(COPY ${PROJECT_SOURCE_DIR}/assets DESTINATION ${PROJECT_BINARY_DIR})
