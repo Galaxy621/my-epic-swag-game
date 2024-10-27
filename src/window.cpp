@@ -31,7 +31,7 @@ Rect Window::get_rect() {
     return Rect(rc.left, rc.top, rc.right - rc.left, rc.bottom - rc.top);
 }
 
-Window::Window(LPCWSTR title, int width, int height) : title(title), width(width), height(height) {
+Window::Window(LPCWSTR title, int32_t width, int32_t height) : title(title), width(width), height(height) {
     WNDCLASSEX wc = {};
     wc.cbSize = sizeof(WNDCLASSEX);
     wc.lpszClassName = L"GameEngineWindow";
@@ -77,7 +77,7 @@ Window::Window(LPCWSTR title, int width, int height) : title(title), width(width
         0
     };
 
-    int pixelFormat = 0;
+    int32_t pixelFormat = 0;
     UINT numFormats = 0;
 
     wglChoosePixelFormatARB(hdc, pixelFormatAttibutes, nullptr, 1, &pixelFormat, &numFormats);
@@ -87,7 +87,7 @@ Window::Window(LPCWSTR title, int width, int height) : title(title), width(width
     DescribePixelFormat(hdc, pixelFormat, sizeof(PIXELFORMATDESCRIPTOR), &pfd);
     SetPixelFormat(hdc, pixelFormat, &pfd);
 
-    int openGLAttributes[] = {
+    int32_t openGLAttributes[] = {
         WGL_CONTEXT_MAJOR_VERSION_ARB, 4,
         WGL_CONTEXT_MINOR_VERSION_ARB, 6,
         // WGL_CONTEXT_FLAGS_ARB, WGL_CONTEXT_FORWARD_COMPATIBLE_BIT_ARB,
