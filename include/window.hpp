@@ -7,7 +7,7 @@
 
 class Window {
     public:
-        Window(LPCWSTR title, int32_t width, int32_t height);
+        Window(LPCSTR title, int32_t width, int32_t height);
         ~Window();
 
         void on_destroy();
@@ -21,7 +21,7 @@ class Window {
         HWND m_handle = nullptr;
         HGLRC m_glContext = nullptr;
 
-        LPCWSTR title;
+        LPCSTR title;
         int32_t width;
         int32_t height;
 };

@@ -10,7 +10,7 @@
 
 Game::Game() {
     m_graphics = std::make_unique<GraphicsEngine>();
-    m_window = std::make_unique<Window>(L"Game", 1280, 720);
+    m_window = std::make_unique<Window>("Game", 1280, 720);
 
     m_window->make_current();
     m_graphics->set_viewport(m_window->get_rect());

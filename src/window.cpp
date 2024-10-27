@@ -31,10 +31,10 @@ Rect Window::get_rect() {
     return Rect(rc.left, rc.top, rc.right - rc.left, rc.bottom - rc.top);
 }
 
-Window::Window(LPCWSTR title, int32_t width, int32_t height) : title(title), width(width), height(height) {
+Window::Window(LPCSTR title, int32_t width, int32_t height) : title(title), width(width), height(height) {
     WNDCLASSEX wc = {};
     wc.cbSize = sizeof(WNDCLASSEX);
-    wc.lpszClassName = L"GameEngineWindow";
+    wc.lpszClassName = title;
     wc.lpfnWndProc = &WndProc;
     wc.style = CS_OWNDC;
 
@@ -44,9 +44,9 @@ Window::Window(LPCWSTR title, int32_t width, int32_t height) : title(title), wid
     RECT rc = {0, 0, width, height};
     AdjustWindowRect(&rc, WS_OVERLAPPED | WS_CAPTION | WS_SYSMENU, false);
 
-    m_handle = CreateWindowEx(
+    m_handle = CreateWindowExA(
         0,
-        MAKEINTATOM(classId),
+        title,
         title,
         WS_OVERLAPPED | WS_CAPTION | WS_SYSMENU,
         CW_USEDEFAULT, 
