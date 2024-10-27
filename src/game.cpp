@@ -28,6 +28,8 @@ void Game::on_create() {
     std::cout << "OpenGL vendor:    " << glGetString(GL_VENDOR) << std::endl;
     std::cout << "Error:            " << glGetError() << std::endl;
 
+    glEnable(GL_DEBUG_OUTPUT);
+
     const float vertices[] = {
         -0.5f, -0.5f, 0.0f,
          0.5f, -0.5f, 0.0f,
