@@ -10,16 +10,22 @@
 #include "rect.hpp"
 #include "vector4.hpp"
 #include "uniform_buffer.hpp"
+#include "settings.hpp"
 
 struct UniformData {
     float gameTime;
 };
 
-Game::Game(GameSettings& desc) : m_vsync(desc.vsync) {
+Game::Game(GameConfig& desc, const char* settingsPath) {
     // std::cout << glGetString(GL_VERSION) << std::endl;
+    m_settings = std::make_shared<GameSettings>(settingsPath);
+
+    int width = m_settings->get_int("width");
+    int height = m_settings->get_int("height");
+    m_vsync = m_settings->get_bool("vsync");
 
     m_graphics = std::make_unique<GraphicsEngine>();
-    m_window = std::make_unique<Window>(desc.title, desc.width, desc.height);
+    m_window = std::make_unique<Window>(desc.title, width, height);
 
     m_window->make_current();
 

@@ -6,15 +6,12 @@
 #include <stdexcept>
 
 #include "game.hpp"
-
-GameSettings settings = {
-    "OpenGL Test", 1280, 720, true
-};
+#include "settings.hpp"
 
 int main() {
-
     try {
-        auto game = std::make_unique<Game>(settings);
+        GameConfig config = {"OpenGL Test"};
+        auto game = std::make_unique<Game>(config, "settings.ini");
         game -> run();
     } catch (const std::exception& e) {
         std::cerr << e.what() << std::endl;

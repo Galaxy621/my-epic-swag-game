@@ -10,19 +10,17 @@
 #include "shader_program.hpp"
 #include "vector4.hpp"
 #include "uniform_buffer.hpp"
+#include "settings.hpp"
 
 typedef std::chrono::time_point<std::chrono::steady_clock> TimePoint;
 
-struct GameSettings {
+struct GameConfig {
     const char* title;
-    int32_t width;
-    int32_t height;
-    bool vsync;
 };
 
 class Game {
     public:
-        Game(GameSettings& desc);
+        Game(GameConfig& desc, const char* settingsPath);
         ~Game();
 
         virtual void on_create();
@@ -44,6 +42,7 @@ class Game {
 
         Vector4 m_background = Vector4(0.0f, 0.0f, 0.0f, 1.0f);
         
+        GameSettingsPtr m_settings;
         VertexArrayObjectPtr m_polyVAO;
         ShaderProgramPtr m_shaderProgram;
         UniformBufferPtr m_uniformBuffer;
