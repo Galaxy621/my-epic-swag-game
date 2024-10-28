@@ -5,6 +5,7 @@
 #include <stdexcept>
 #include <fstream>
 #include <sstream>
+#include <memory>
 
 ShaderProgram::ShaderProgram(const ShaderProgramDesc& desc) {
     m_programId = glCreateProgram();
@@ -46,13 +47,12 @@ void ShaderProgram::attach(const char* source, const ShaderType type) {
 	glGetShaderiv(shaderId, GL_INFO_LOG_LENGTH, &length);
 
 	if (length > 0) {
-        char* message = new char[length - 2];
-		glGetShaderInfoLog(shaderId, length - 2, &length, message);
+        std::unique_ptr<char> message(new char[length - 2]);
+		glGetShaderInfoLog(shaderId, length - 2, &length, message.get());
 
 		std::cout << "Failed to compile " << (type == VERTEX_SHADER ? "vertex" : "fragment") << " shader\n";
 		std::cout << message << std::endl;
         
-        delete[] message;
 		glDeleteShader(shaderId);
 	} else {
         glAttachShader(m_programId, shaderId);
@@ -70,13 +70,12 @@ void ShaderProgram::link() {
     glGetProgramiv(m_programId, GL_INFO_LOG_LENGTH, &length);
 
     if (length > 0) {
-        char* message = new char[length - 2];
-        glGetProgramInfoLog(m_programId, length - 2, &length, message);
+        std::unique_ptr<char> message(new char[length - 2]);
+        glGetProgramInfoLog(m_programId, length - 2, &length, message.get());
 
         std::cout << "Failed to link shader program\n";
         std::cout << message << std::endl;
 
-        delete[] message;
         glDeleteProgram(m_programId);
     }
 }
