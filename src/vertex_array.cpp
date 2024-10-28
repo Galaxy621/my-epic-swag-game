@@ -1,5 +1,6 @@
 #include "vertex_array.hpp"
 
+#include <windows.h>
 #include <glad/glad.h>
 #include <assert.h>
 #include <stdexcept>

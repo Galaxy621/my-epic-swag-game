@@ -13,21 +13,32 @@
 
 typedef std::chrono::time_point<std::chrono::steady_clock> TimePoint;
 
+struct GameSettings {
+    const char* title;
+    int32_t width;
+    int32_t height;
+    bool vsync;
+};
+
 class Game {
     public:
-        Game();
+        Game(GameSettings& desc);
         ~Game();
 
         virtual void on_create();
         virtual void on_destroy();
         virtual void on_update(float deltaTime);
     
+        void render(float deltaTime);
+
         void run();
         void platform_update();
         void quit();
 
     private:
         bool m_running = true;
+        bool m_vsync = true;
+
         TimePoint m_lastFrameTime;
         TimePoint m_firstFrameTime;
 

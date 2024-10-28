@@ -4,6 +4,7 @@
 
 #include "graphics.hpp"
 
+#include <windows.h>
 #include <glad/glad.h>
 #include <glad/glad_wgl.h>
 

@@ -1,6 +1,7 @@
 #include <iostream>
 #include <memory>
 
+#include <windows.h>
 #include <glad/glad.h>
 
 #include "game.hpp"
@@ -14,11 +15,11 @@ struct UniformData {
     float gameTime;
 };
 
-Game::Game() {
+Game::Game(GameSettings& desc) : m_vsync(desc.vsync) {
     // std::cout << glGetString(GL_VERSION) << std::endl;
 
     m_graphics = std::make_unique<GraphicsEngine>();
-    m_window = std::make_unique<Window>("Game", 1280, 720);
+    m_window = std::make_unique<Window>(desc.title, desc.width, desc.height);
 
     m_window->make_current();
 
@@ -27,6 +28,8 @@ Game::Game() {
 }
 
 Game::~Game() {
+    auto lifetime = std::chrono::duration_cast<std::chrono::nanoseconds>(m_lastFrameTime - m_firstFrameTime);
+    std::cout << "Game lifetime: " << lifetime.count() / 1000000.0f  << "ms" << std::endl;
     std::cout << "meow" << std::endl;
 }
 
@@ -38,11 +41,11 @@ void Game::run() {
         platform_update();    
 
         auto now = std::chrono::steady_clock::now();
-        auto duration = std::chrono::duration_cast<std::chrono::milliseconds>(now - m_lastFrameTime);
+        auto duration = std::chrono::duration_cast<std::chrono::nanoseconds>(now - m_lastFrameTime);
         m_lastFrameTime = now;
 
         on_update(
-            duration.count() / 1000.0f
+            duration.count() / 1000000000.0f
         );
     }
 
@@ -104,11 +107,15 @@ void Game::on_destroy() {
 }
 
 void Game::on_update(float deltaTime) {
+    render(deltaTime);
+}
+
+void Game::render(float deltaTime) {
     glClearColor(v4_unpack(m_background));
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
     UniformData data = {
-        std::chrono::duration_cast<std::chrono::milliseconds>(m_lastFrameTime - m_firstFrameTime).count() / 1000.0f
+        std::chrono::duration_cast<std::chrono::nanoseconds>(m_lastFrameTime - m_firstFrameTime).count() / 1000000000.0f
     };
 
     glBindVertexArray(m_polyVAO->get_id()); // set vertex array
@@ -119,7 +126,7 @@ void Game::on_update(float deltaTime) {
     glUseProgram(m_shaderProgram->get_id()); // set shader program
     glDrawArrays(GL_TRIANGLE_STRIP, 0, m_polyVAO->get_vertex_buffer_size()); // draw tris
 
-    m_window->present(true);
+    m_window->present(m_vsync);
 }
 
 void Game::quit() {
