@@ -62,6 +62,11 @@ void ShaderProgram::attach(const char* source, const ShaderType type) {
 
 }
 
+void ShaderProgram::set_uniform_buffer_slot(const char* name, uint32_t slot) {
+    uint32_t index = glGetUniformBlockIndex(m_programId, name);
+    glUniformBlockBinding(m_programId, index, slot);
+}
+
 void ShaderProgram::link() {
     glLinkProgram(m_programId);
     // glUseProgram(m_programId);

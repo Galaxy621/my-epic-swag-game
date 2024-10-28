@@ -20,6 +20,7 @@ class ShaderProgram {
         ~ShaderProgram();
 
         uint32_t get_id() const { return m_programId; }
+        void set_uniform_buffer_slot(const char* name, uint32_t slot);
 
     private:
         void attach(const char* source, const ShaderType type);

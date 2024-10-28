@@ -8,6 +8,11 @@
 #include "graphics.hpp"
 #include "rect.hpp"
 #include "vector4.hpp"
+#include "uniform_buffer.hpp"
+
+struct UniformData {
+    float gameTime;
+};
 
 Game::Game() {
     // std::cout << glGetString(GL_VERSION) << std::endl;
@@ -54,13 +59,16 @@ void Game::on_create() {
 
     const float vertices[] = {
         -0.5f, -0.5f, 0.0f,
-         1.0f,  0.0f, 0.0f,
+        1, 0, 0,
 
-         0.5f, -0.5f, 0.0f,
-         0.0f,  1.0f, 0.0f,
+        -0.5f, 0.5f, 0.0f,
+        0, 1, 0,
 
-         0.0f,  0.5f, 0.0f,
-         0.0f,  0.0f, 1.0f
+        0.5f, -0.5f, 0.0f,
+        0, 0, 1,
+
+        0.5f, 0.5f, 0.0f,
+        1, 1, 0,
     };
 
     VertexAttribute attributes[] = {
@@ -68,12 +76,17 @@ void Game::on_create() {
         {3}
     };
 
-    m_trisVAO = m_graphics->create_vertex_array_object({
+    m_polyVAO = m_graphics->create_vertex_array_object({
         (void*) vertices,
         6 * sizeof(float),
-        3,
+        4,
+
         attributes,
         2
+    });
+
+    m_uniformBuffer = m_graphics->create_uniform_buffer({
+        sizeof(UniformData)
     });
 
     m_shaderProgram = m_graphics->create_shader_program({
@@ -82,6 +95,9 @@ void Game::on_create() {
     });
 
     m_lastFrameTime = std::chrono::steady_clock::now();
+    m_firstFrameTime = m_lastFrameTime;
+
+    m_shaderProgram->set_uniform_buffer_slot("UniformData", 0);
 }
 
 void Game::on_destroy() {
@@ -91,9 +107,17 @@ void Game::on_update(float deltaTime) {
     glClearColor(v4_unpack(m_background));
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-    glBindVertexArray(m_trisVAO->get_id());
-    glUseProgram(m_shaderProgram->get_id());
-    glDrawArrays(GL_TRIANGLES, 0, m_trisVAO->get_vertex_buffer_size());
+    UniformData data = {
+        std::chrono::duration_cast<std::chrono::milliseconds>(m_lastFrameTime - m_firstFrameTime).count() / 1000.0f
+    };
+
+    glBindVertexArray(m_polyVAO->get_id()); // set vertex array
+
+    glBindBufferBase(GL_UNIFORM_BUFFER, 0, m_uniformBuffer->get_id()); // set uniform buffer
+    glBufferSubData(GL_UNIFORM_BUFFER, 0, sizeof(UniformData), &data); // give data to uniform buffer
+
+    glUseProgram(m_shaderProgram->get_id()); // set shader program
+    glDrawArrays(GL_TRIANGLE_STRIP, 0, m_polyVAO->get_vertex_buffer_size()); // draw tris
 
     m_window->present(true);
 }
