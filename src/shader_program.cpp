@@ -45,8 +45,7 @@ void ShaderProgram::attach(const char* source, const ShaderType type) {
 	int length;
 	glGetShaderiv(shaderId, GL_INFO_LOG_LENGTH, &length);
 
-	if (length > 0)
-	{
+	if (length > 0) {
         char* message = new char[length - 2];
 		glGetShaderInfoLog(shaderId, length - 2, &length, message);
 
@@ -65,5 +64,19 @@ void ShaderProgram::attach(const char* source, const ShaderType type) {
 
 void ShaderProgram::link() {
     glLinkProgram(m_programId);
-    glUseProgram(m_programId);
+    // glUseProgram(m_programId);
+
+    int length;
+    glGetProgramiv(m_programId, GL_INFO_LOG_LENGTH, &length);
+
+    if (length > 0) {
+        char* message = new char[length - 2];
+        glGetProgramInfoLog(m_programId, length - 2, &length, message);
+
+        std::cout << "Failed to link shader program\n";
+        std::cout << message << std::endl;
+
+        delete[] message;
+        glDeleteProgram(m_programId);
+    }
 }

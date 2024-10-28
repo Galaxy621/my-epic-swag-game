@@ -1,10 +1,16 @@
 #include "vertex_array.hpp"
 
 #include <glad/glad.h>
+#include <assert.h>
 #include <stdexcept>
 #include <iostream>
 
 VertexArrayObject::VertexArrayObject(const VertexBufferDesc& vertexData) {
+
+    assert(data.listSize);
+    assert(data.vertexSize);
+    assert(data.verticesList);
+
     glGenVertexArrays(1, &m_vertexArrayObjectId);
     if (!m_vertexArrayObjectId) throw std::runtime_error("Failed to create vertex array object");
     glBindVertexArray(m_vertexArrayObjectId);
