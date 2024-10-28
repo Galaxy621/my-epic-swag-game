@@ -16,19 +16,19 @@ namespace ini {
         COMMENT = 0x3E          // ;
     };
 
-    class IniSection {
-        public:
-            IniSection(std::string name);
-            ~IniSection();
+    // class IniSection {
+    //     public:
+    //         IniSection(std::string name);
+    //         ~IniSection();
 
-            void add(std::string key, std::string value);
+    //         void add(std::string key, std::string value);
             
-        private:
-            std::string m_name;
-            std::unordered_map<std::string, std::string> m_data;
-            std::unordered_map<std::string, IniSection> m_subSections;
+    //     private:
+    //         std::string m_name;
+    //         std::unordered_map<std::string, std::string> m_data;
+    //         std::unordered_map<std::string, IniSection> m_subSections;
 
-    };
+    // };
 
     class IniReader {
         public:
@@ -42,7 +42,7 @@ namespace ini {
             std::string get(std::string section, std::string key);
         
         private:
-            std::unordered_map<std::string, IniSection> m_sections;
+            // std::unordered_map<std::string, IniSection> m_sections;
             std::istream* m_stream;
     };
 }
