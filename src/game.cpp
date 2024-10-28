@@ -54,14 +54,26 @@ void Game::on_create() {
 
     const float vertices[] = {
         -0.5f, -0.5f, 0.0f,
+         1.0f,  0.0f, 0.0f,
+
          0.5f, -0.5f, 0.0f,
-         0.0f,  0.5f, 0.0f
+         0.0f,  1.0f, 0.0f,
+
+         0.0f,  0.5f, 0.0f,
+         0.0f,  0.0f, 1.0f
+    };
+
+    VertexAttribute attributes[] = {
+        {3},
+        {3}
     };
 
     m_trisVAO = m_graphics->create_vertex_array_object({
         (void*) vertices,
-        3 * sizeof(float),
-        3
+        6 * sizeof(float),
+        3,
+        attributes,
+        2
     });
 
     m_shaderProgram = m_graphics->create_shader_program({

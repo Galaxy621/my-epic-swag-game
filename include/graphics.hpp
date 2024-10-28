@@ -11,7 +11,7 @@ class GraphicsEngine {
         GraphicsEngine();
         ~GraphicsEngine();
 
-        VertexArrayObjectPtr create_vertex_array_object(const VertexBufferData& vertexData);
+        VertexArrayObjectPtr create_vertex_array_object(const VertexBufferDesc& vertexData);
         ShaderProgramPtr create_shader_program(const ShaderProgramDesc& desc);
 };
 

@@ -7,7 +7,7 @@
 #include <glad/glad.h>
 #include <glad/glad_wgl.h>
 
-VertexArrayObjectPtr GraphicsEngine::create_vertex_array_object(const VertexBufferData& vertexData) {
+VertexArrayObjectPtr GraphicsEngine::create_vertex_array_object(const VertexBufferDesc& vertexData) {
     return std::make_shared<VertexArrayObject>(vertexData);
 }
 

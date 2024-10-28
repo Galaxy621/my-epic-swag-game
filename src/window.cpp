@@ -31,6 +31,17 @@ LRESULT CALLBACK WndProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam) {
             break;
         }
 
+        case WM_SIZE: {
+            auto window = (Window*) GetWindowLongPtr(hwnd, GWLP_USERDATA);
+
+            int width = LOWORD(lParam);
+            int height = HIWORD(lParam);
+
+            window->resize(width, height);
+
+            break;
+        }
+
         default:
             return DefWindowProc(hwnd, msg, wParam, lParam);
     }
