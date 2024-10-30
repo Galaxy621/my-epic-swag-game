@@ -19,6 +19,10 @@ UniformBuffer::~UniformBuffer() {
     glDeleteBuffers(1, &m_id);
 }
 
+std::string UniformBuffer::get_identifier() {
+    return m_identifier;
+}
+
 uint32_t UniformBuffer::get_id() {
     return m_id;
 }

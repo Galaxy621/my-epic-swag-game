@@ -3,6 +3,7 @@
 
 #include <memory>
 #include <chrono>
+#include <vector>
 
 #include "window.hpp"
 #include "graphics.hpp"
@@ -28,6 +29,7 @@ class Game {
         virtual void on_update(float deltaTime);
     
         void render(float deltaTime);
+        UniformBufferPtr register_uniform_buffer(const UniformBufferDesc& data);
 
         void run();
         void platform_update();
@@ -45,7 +47,8 @@ class Game {
         GameSettingsPtr m_settings;
         VertexArrayObjectPtr m_polyVAO;
         ShaderProgramPtr m_shaderProgram;
-        UniformBufferPtr m_uniformBuffer;
+        std::vector<UniformBufferPtr> m_uniformBuffers;
+        // UniformBufferPtr m_uniformBuffer;
 
         std::unique_ptr<GraphicsEngine> m_graphics = nullptr;
         std::unique_ptr<Window> m_window = nullptr;

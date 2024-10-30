@@ -3,8 +3,10 @@
 
 #include <cstdint>
 #include <memory>
+#include <string>
 
 struct UniformBufferDesc {
+    std::string identifier;
     uint32_t size;
 };
 
@@ -14,8 +16,10 @@ class UniformBuffer {
         ~UniformBuffer();
 
         uint32_t get_id();
+        std::string get_identifier();
 
     private:
+        std::string m_identifier;
         uint32_t m_size;
         uint32_t m_id;
 };

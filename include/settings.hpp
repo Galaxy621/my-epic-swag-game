@@ -1,6 +1,7 @@
 #ifndef SETTINGS_HPP
 #define SETTINGS_HPP
 
+#include <cstdint>
 #include <unordered_map>
 #include <string>
 #include <memory>
@@ -24,7 +25,7 @@ class GameSettings {
         void save();
         
         std::string get(std::string key);
-        int get_int(std::string key);
+        int32_t get_int(std::string key);
         bool get_bool(std::string key);
 
         void set(const char* key, const char* value);
