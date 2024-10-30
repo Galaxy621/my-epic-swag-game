@@ -5,12 +5,8 @@
 #include <string>
 #include <memory>
 
-// Ideally, settings would follow a similar structure to the INI file format
-//
-// [section]
-// key=value
-//
-// But for right now, we'll just use a simple key-value pair system
+// ngl probably just gonna make my own format
+// no need for sections, just key value pairs
 
 const std::unordered_map<std::string, std::string> defaultSettings = {
     {"version", "1.0"},
