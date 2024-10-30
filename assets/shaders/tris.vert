@@ -7,15 +7,15 @@ layout(location = 0) out vec3 outColour;
 
 uniform UniformData {
     float gameTime;
+
     float windowWidth;
     float windowHeight;
 };
 
 void main() {
-    float ratio = windowHeight / windowWidth;
-
-    gl_Position.x = position.x * abs(sin(gameTime)) * ratio;
+    gl_Position.x = position.x * abs(sin(gameTime));
     gl_Position.y = position.y * abs(sin(gameTime));
+
     gl_Position.w = 1.0;
 
     outColour = colour;

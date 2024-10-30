@@ -16,8 +16,12 @@
 
 struct UniformData {
     float gameTime;
+
     float windowWidth;
-    float windowHeight;    
+    float windowHeight;
+
+    int32_t windowTop;
+    int32_t windowLeft;
 };
 
 Game::Game(GameConfig& desc, const char* settingsPath) {
@@ -103,20 +107,15 @@ void Game::on_create() {
         "assets/shaders/tris.frag"
     });
 
-    auto buff = register_uniform_buffer({
+    m_uniformBuffers.push_back(m_graphics->create_uniform_buffer({
         "UniformData",
         sizeof(UniformData)
-    });
+    }));
+
+    m_shaderProgram -> set_uniform_buffer_slot("UniformData", 0);
 
     m_lastFrameTime = std::chrono::steady_clock::now();
     m_firstFrameTime = m_lastFrameTime;
-}
-
-UniformBufferPtr Game::register_uniform_buffer(const UniformBufferDesc& data) {
-    auto buff = m_graphics->create_uniform_buffer(data);
-    m_uniformBuffers.push_back(buff);
-    m_shaderProgram->set_uniform_buffer_slot(data.identifier.c_str(), m_uniformBuffers.size() - 1);
-    return buff;
 }
 
 void Game::on_destroy() {
@@ -130,25 +129,19 @@ void Game::render(float deltaTime) {
     glClearColor(v4_unpack(m_background));
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-    Rect rect = m_window->get_rect();;
-    float width = (float) rect.width;
-    float height = (float) rect.height;
+    glBindVertexArray(m_polyVAO->get_id()); // set vertex array
+
+    Rect rect = m_window->get_rect();
 
     UniformData data = {
         std::chrono::duration_cast<std::chrono::nanoseconds>(m_lastFrameTime - m_firstFrameTime).count() / 1000000000.0f,
-        width,
-        height
+
+        (float) rect.width,
+        (float) rect.height,
     };
 
-    glBindVertexArray(m_polyVAO->get_id()); // set vertex array
-
-    for (int i = 0; i < m_uniformBuffers.size(); i++) {
-        glBindBufferBase(GL_UNIFORM_BUFFER, i, m_uniformBuffers[i]->get_id()); // set uniform buffer
-        glBufferSubData(GL_UNIFORM_BUFFER, i, sizeof(UniformData), &data); // give data to uniform buffer
-    }
-
-    // glBindBufferBase(GL_UNIFORM_BUFFER, 0, m_uniformBuffer->get_id()); // set uniform buffer
-    // glBufferSubData(GL_UNIFORM_BUFFER, 0, sizeof(UniformData), &data); // give data to uniform buffer
+    glBindBufferBase(GL_UNIFORM_BUFFER, 0, m_uniformBuffers[0]->get_id()); // set uniform buffer
+    glBufferSubData(GL_UNIFORM_BUFFER, 0, sizeof(UniformData), &data); // give data to uniform buffer
 
     glUseProgram(m_shaderProgram->get_id()); // set shader program
     glDrawArrays(GL_TRIANGLE_STRIP, 0, m_polyVAO->get_vertex_buffer_size()); // draw tris
