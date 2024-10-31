@@ -2,6 +2,8 @@
 #include <memory>
 #include <cstdint>
 #include <string>
+#include <chrono>
+#include <cmath>
 
 #include <windows.h>
 #include <glad/glad.h>
@@ -11,17 +13,16 @@
 #include "graphics.hpp"
 #include "rect.hpp"
 #include "vector4.hpp"
+#include "matrix4.hpp"
 #include "uniform_buffer.hpp"
 #include "settings.hpp"
 
 struct UniformData {
-    float gameTime;
-
-    float windowWidth;
-    float windowHeight;
-
-    int32_t windowTop;
-    int32_t windowLeft;
+    // float gameTime;
+    Matrix4 world;
+    Matrix4 translation;
+    Matrix4 scale;
+    Vector3 rotation;
 };
 
 Game::Game(GameConfig& desc, const char* settingsPath) {
@@ -74,6 +75,7 @@ void Game::on_create() {
 
     glEnable(GL_DEBUG_OUTPUT);
 
+    // rectangle
     const float vertices[] = {
         -0.5f, -0.5f, 0.0f,
         1, 0, 0,
@@ -132,13 +134,21 @@ void Game::render(float deltaTime) {
     glBindVertexArray(m_polyVAO->get_id()); // set vertex array
 
     Rect rect = m_window->get_rect();
+    float gameTime = std::chrono::duration_cast<std::chrono::nanoseconds>(m_lastFrameTime - m_firstFrameTime).count() / 1000000000.0f;
+    float x = sin(gameTime * 2);
+    float y = cos(gameTime * 2);
 
-    UniformData data = {
-        std::chrono::duration_cast<std::chrono::nanoseconds>(m_lastFrameTime - m_firstFrameTime).count() / 1000000000.0f,
+    Matrix4 world, translation, scale;
+    world.set_identity();
+    // translation.set_translation(Vector3(x, y, 0.0f));
+    // scale.set_scale(Vector3(1, 1, 1));
 
-        (float) rect.width,
-        (float) rect.height,
-    };
+    Vector3 rotation;
+    rotation.x = gameTime;
+    rotation.y = gameTime;
+    rotation.z = gameTime;
+
+    UniformData data = {world, translation, scale, rotation};
 
     glBindBufferBase(GL_UNIFORM_BUFFER, 0, m_uniformBuffers[0]->get_id()); // set uniform buffer
     glBufferSubData(GL_UNIFORM_BUFFER, 0, sizeof(UniformData), &data); // give data to uniform buffer
